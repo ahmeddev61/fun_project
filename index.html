@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treat Time! 🎉</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #ff9a9e 0%,
+          #fecfef 99%,
+          #fecfef 100%
+        );
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        max-width: 440px;
+        width: 90%;
+        position: relative;
+        z-index: 10;
+      }
+
+      h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 22px;
+      }
+
+      .vip-note {
+        font-size: 13px;
+        color: #e63946;
+        margin-bottom: 20px;
+        font-weight: 600;
+        background-color: #fff0f3;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px dashed #ff758c;
+      }
+
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        margin-top: 25px;
+      }
+
+      button {
+        padding: 12px 25px;
+        font-size: 15px;
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      #yesBtn {
+        background-color: #28a745;
+        color: white;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+      }
+
+      #yesBtn:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+      }
+
+      #noBtn {
+        background-color: #dc3545;
+        color: white;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        transition: 0.1s ease-out;
+      }
+
+      .input-box,
+      .select-box {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s;
+        background-color: #fff;
+      }
+
+      .input-box:focus,
+      .select-box:focus {
+        border-color: #ff758c;
+      }
+
+      .submit-btn {
+        background-color: #ff758c;
+        color: white;
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+      }
+
+      .submit-btn:hover {
+        background-color: #ff5270;
+      }
+
+      .error-text {
+        color: #dc3545;
+        font-size: 13px;
+        margin-top: -12px;
+        margin-bottom: 15px;
+        text-align: left;
+        display: none;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .success-msg {
+        color: #28a745;
+        font-size: 17px;
+        font-weight: bold;
+        line-height: 1.6;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <!-- Step 0: Treat dene wala kaun hai? -->
+      <div id="step0">
+        <h2>Pehle yeh batao, treat kaun de raha hai? 🤔</h2>
+        <div class="vip-note">
+          😎 Note: Ahmad Daniyal VIP hai, woh free hai (Treat nahi dega)!
+        </div>
+
+        <select id="giverSelect" class="select-box">
+          <option value="">-- Naam Select Karein --</option>
+          <option value="Ansar">Ansar</option>
+          <option value="Bilal">Bilal</option>
+          <option value="Manahil">Manahil</option>
+          <option value="Shayan">Shayan</option>
+          <option value="Huzaifa">Huzaifa</option>
+          <!-- Yeh option disabled hai taaki select na ho sake -->
+          <option
+            value="Ahmad Daniyal"
+            disabled
+            style="color: #aaa; background: #f1f1f1"
+          >
+            Ahmad Daniyal (VIP - Free 🤩)
+          </option>
+        </select>
+        <div id="giverError" class="error-text">
+          Pehle apna naam select karein!
+        </div>
+        <button class="submit-btn" onclick="handleGiver()">
+          Aage Badho ➡️
+        </button>
+      </div>
+
+      <!-- Step 1: Main Question -->
+      <div id="step1" class="hidden">
+        <h2 id="questionTitle">Bhai, ab treat kab de raha hai? 🍕</h2>
+        <div class="btn-container">
+          <button id="yesBtn" onclick="handleYes()">Haan Bilkul! 😎</button>
+          <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">
+            Nahi Dunga 😜
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Budget -->
+      <div id="step2" class="hidden">
+        <h2>Sahi hai! Budget kitna hai tera? (Rs) 💸</h2>
+        <input
+          type="number"
+          id="budgetInput"
+          class="input-box"
+          placeholder="Jaise: 1500"
+          min="100"
+        />
+        <div id="budgetError" class="error-text">
+          Kripya koi valid amount (Numbers mein) enter karein!
+        </div>
+        <button class="submit-btn" onclick="handleBudget()">
+          Aage Badho ➡️
+        </button>
+      </div>
+
+      <!-- Step 3: Time Selector -->
+      <div id="step3" class="hidden">
+        <h2>Kis time chalna hai? ⏰</h2>
+        <select id="timeSelect" class="select-box">
+          <option value="">-- Time Select Karein --</option>
+          <option value="Aaj Raat 8:00 PM">Aaj Raat 8:00 PM 🌙</option>
+          <option value="Aaj Raat 9:30 PM">Aaj Raat 9:30 PM 🌙</option>
+          <option value="Kal Dopahar 1:00 PM (Lunch)">
+            Kal Dopahar 1:00 PM (Lunch) ☀️
+          </option>
+          <option value="Kal Shaam 5:30 PM (Evening Snacks)">
+            Kal Shaam 5:30 PM (Evening Snacks) ☕
+          </option>
+          <option value="Kal Raat 8:30 PM (Dinner)">
+            Kal Raat 8:30 PM (Dinner) 🍽️
+          </option>
+          <option value="Weekend (Saturday Night)">
+            Weekend (Saturday Night) 🎉
+          </option>
+        </select>
+        <div id="timeError" class="error-text">
+          Pehle koi timing select karein!
+        </div>
+        <button class="submit-btn" onclick="handleTime()">
+          Pakka Ho Gaya ➡️
+        </button>
+      </div>
+
+      <!-- Step 4: Dish -->
+      <div id="step4" class="hidden">
+        <h2>Khana kya hai? 🍔</h2>
+        <input
+          type="text"
+          id="dishInput"
+          class="input-box"
+          placeholder="Jaise: Biryani, Pizza, Burger..."
+        />
+        <div id="dishError" class="error-text">
+          Kripya khane ka naam (Alphabets) enter karein, numbers nahi!
+        </div>
+        <button class="submit-btn" onclick="handleDish()">Done Karo! 🎉</button>
+      </div>
+
+      <!-- Step 5: Final Summary -->
+      <div id="step5" class="hidden">
+        <div class="success-msg" id="finalSummary"></div>
+      </div>
+    </div>
+
+    <script>
+      let userData = {};
+
+      function handleGiver() {
+        const giverVal = document.getElementById("giverSelect").value;
+        const errorDiv = document.getElementById("giverError");
+
+        if (giverVal === "") {
+          errorDiv.style.display = "block";
+          return;
+        }
+        errorDiv.style.display = "none";
+        userData.giver = giverVal;
+
+        document.getElementById(
+          "questionTitle"
+        ).innerHTML = `${userData.giver}, ab treat kab de raha/rahi hai? 🍕`;
+
+        document.getElementById("step0").classList.add("hidden");
+        document.getElementById("step1").classList.remove("hidden");
+      }
+
+      function moveButton() {
+        const noBtn = document.getElementById("noBtn");
+        const padding = 100;
+        const randomX =
+          Math.random() * (window.innerWidth - noBtn.offsetWidth - padding);
+        const randomY =
+          Math.random() * (window.innerHeight - noBtn.offsetHeight - padding);
+
+        noBtn.style.position = "fixed";
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+      }
+
+      function handleYes() {
+        document.getElementById("noBtn").style.display = "none";
+        document.getElementById("step1").classList.add("hidden");
+        document.getElementById("step2").classList.remove("hidden");
+      }
+
+      function handleBudget() {
+        const budgetVal = document.getElementById("budgetInput").value;
+        const errorDiv = document.getElementById("budgetError");
+
+        if (budgetVal === "" || isNaN(budgetVal) || Number(budgetVal) <= 0) {
+          errorDiv.style.display = "block";
+          return;
+        }
+        errorDiv.style.display = "none";
+        userData.budget = "Rs. " + budgetVal;
+
+        document.getElementById("step2").classList.add("hidden");
+        document.getElementById("step3").classList.remove("hidden");
+      }
+
+      function handleTime() {
+        const timeVal = document.getElementById("timeSelect").value;
+        const errorDiv = document.getElementById("timeError");
+
+        if (timeVal === "") {
+          errorDiv.style.display = "block";
+          return;
+        }
+        errorDiv.style.display = "none";
+        userData.time = timeVal;
+
+        document.getElementById("step3").classList.add("hidden");
+        document.getElementById("step4").classList.remove("hidden");
+      }
+
+      function handleDish() {
+        const dishVal = document.getElementById("dishInput").value.trim();
+        const errorDiv = document.getElementById("dishError");
+
+        if (dishVal === "" || !isNaN(dishVal)) {
+          errorDiv.style.display = "block";
+          return;
+        }
+        errorDiv.style.display = "none";
+        userData.dish = dishVal;
+
+        document.getElementById("step4").classList.add("hidden");
+        document.getElementById("step5").classList.remove("hidden");
+
+        document.getElementById("finalSummary").innerHTML = `
+                🎉 Deal Locked Successfully! 🎉<br><br>
+                👤 Treat By: <b>${userData.giver}</b><br>
+                💰 Budget: <b>${userData.budget}</b><br>
+                ⏰ Timing: <b>${userData.time}</b><br>
+                🍽️ Menu: <b>${userData.dish}</b><br><br>
+                <span style="font-size: 14px; color: #555; font-weight: normal;">Screenshot leke ab jaldi se group par bhejo! 🥳</span>
+            `;
+      }
+    </script>
+  </body>
+</html>
